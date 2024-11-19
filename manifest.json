@@ -1,0 +1,36 @@
+{
+    "manifest_version": 3,
+    "name": "WriteWise",
+    "version": "1.0.0",
+    "description": "Chrome extension to help with content writing",
+    "icons": {
+        "128": "icon128.png",
+        "48": "icon48.png",
+        "16": "icon16.png"
+    },
+    "action": {
+        "default_icon": "icon16.png"
+    },
+    "background": {
+        "service_worker": "/dest/background.js"
+    },
+    "content_scripts":[
+        {
+            "matches": ["https://*/*", "http://*/*"],
+            "js": ["content.js", "jquery-3.6.0.min.js"],
+            "css": ["content.css"],
+            "run_at": "document_end"
+        }
+    ],
+    "permissions":["storage", "tabs", "contextMenus"],
+    "web_accessible_resources": [
+        {
+            "resources":["content.css"],
+            "matches": ["https://*/*", "http://*/*"]
+        },
+        {
+            "resources":["/icons/*"],
+            "matches": ["https://*/*", "http://*/*"]
+        }
+    ]
+}

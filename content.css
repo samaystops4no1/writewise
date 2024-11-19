@@ -1,0 +1,441 @@
+.writewise-icon{
+    position: fixed;
+    inset-block-start: anchor(end);
+    inset-inline-start: anchor(self-end);
+    margin: 5px 0 0 5px;
+    z-index: 2147483647;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+@keyframes spin-border {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.writewise-icon-image{
+    height: 100%;
+    width: 100%;
+}
+
+.writewise-popup-window {
+    width: 300px;
+    max-height: 500px;
+    background-color: #f8f9fa;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    display: none; /* Hidden by default */
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 2147483647;
+    overflow: scroll;
+  }
+
+  .writewise-loader-container{
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    width: 100%; /* Or any desired width */
+    height: 100%;
+  }
+
+  .writewise-loader-container img {
+    max-width: 100%; /* Ensures the image doesn't exceed container's width */
+    max-height: 100%; /* Ensures the image doesn't exceed container's height */
+  }
+
+  .writewise-container {
+    padding: 12px;
+}
+
+.writewise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.writewise-logo {
+    width: 24px;
+    height: 24px;
+    /* Replace with actual logo */
+    background-color: #333;
+    border-radius: 4px;
+}
+
+.writewise-logo img{
+    width: 100%;
+    height: 100%;
+}
+
+.writewise-close-button {
+    cursor: pointer;
+    padding: 4px;
+}
+
+.writewise-close-button svg {
+    width: 16px;
+    height: 16px;
+    fill: #666;
+}
+
+.writewise-close-button:hover svg {
+    fill: #333;
+}
+
+.writewise-word-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 12px;
+    padding-right: 8px;
+}
+
+.writewise-word-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.writewise-word-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.writewise-word-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.writewise-word-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.writewise-wrong-word {
+    color: #d32f2f;
+    text-decoration: line-through;
+    margin-right: 12px;
+}
+
+.writewise-arrow {
+    color: #666;
+    margin-right: 12px;
+    font-size: 14px;
+}
+
+.writewise-correct-word {
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.writewise-error-message{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.questionwise-container {
+    padding: 16px;
+    max-height: 500px; /* Maximum height for the entire popup */
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fa;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
+    position: fixed;
+    inset-block-start: anchor(end);
+    inset-inline-start: anchor(self-end);
+    margin: 5px 0 0 5px;
+    z-index: 2147483647;
+}
+
+.questionwise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 16px;
+    flex-shrink: 0; /* Prevents header from shrinking */
+}
+
+.questionwise-logo {
+    width: 24px;
+    height: 24px;
+    /* Replace with actual logo */
+    background-color: #333;
+    border-radius: 4px;
+}
+
+.questionwise-close-button {
+    cursor: pointer;
+    padding: 4px;
+}
+
+.questionwise-close-button svg {
+    width: 16px;
+    height: 16px;
+    fill: #666;
+}
+
+.questionwise-close-button:hover svg {
+    fill: #333;
+}
+
+.questionwise-input-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-shrink: 0; /* Prevents input container from shrinking */
+}
+
+.questionwise-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 24px;
+}
+
+.questionwise-input:focus {
+    border-color: #2196f3;
+}
+
+.questionwise-submit-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.questionwise-submit-button svg {
+    width: 24px;
+    height: 24px;
+    fill: #2196f3;
+}
+
+.questionwise-submit-button:hover svg {
+    fill: #1976d2;
+}
+
+.questionwise-response-container {
+    display: none; /* Initially hidden */
+    flex: 1;
+    min-height: 0; /* Important for Firefox */
+    overflow: hidden; /* Contains the response and actions */
+    display: flex;
+    flex-direction: column;
+}
+
+.questionwise-response-scroll {
+    flex: 1;
+    overflow-y: auto;
+    margin-right: -8px; /* Compensate for scrollbar */
+    padding-right: 8px; /* Add padding back */
+}
+
+.questionwise-response {
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.questionwise-response-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 4px;
+    flex-shrink: 0; /* Prevents action buttons from shrinking */
+    background-color: white; /* Ensures buttons are always visible */
+}
+
+.questionwise-action-button {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.questionwise-action-button svg {
+    width: 18px;
+    height: 18px;
+    fill: #666;
+}
+
+.questionwise-action-button:hover {
+    background-color: #f0f0f0;
+}
+
+.questionwise-action-button:hover svg {
+    fill: #2196f3;
+}
+
+.questionwise-copy-success {
+    background-color: #4caf50;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    position: absolute;
+    display: none;
+}
+
+/* Scrollbar styling */
+.questionwise-response-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.questionwise-response-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.questionwise-response-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.questionwise-response-scroll::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.questionwise-response-loader{
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    width: 100%; /* Or any desired width */
+    height: 100%;
+  }
+
+.questionwise-response-loader img {
+    max-width: 100%; /* Ensures the image doesn't exceed container's width */
+    max-height: 100%; /* Ensures the image doesn't exceed container's height */
+}
+
+.writewise-response-loader{
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    width: 100%; /* Or any desired width */
+    height: 100%;
+  }
+
+.writewise-response-loader img {
+    max-width: 100%; /* Ensures the image doesn't exceed container's width */
+    max-height: 100%; /* Ensures the image doesn't exceed container's height */
+}
+
+.questionwise-logo {
+    width: 24px;
+    height: 24px;
+    /* Replace with actual logo */
+    background-color: #333;
+    border-radius: 4px;
+}
+
+.questionwise-logo img{
+    width: 100%;
+    height: 100%;
+}
+
+.writewise-input-section {
+    margin-top: 20px;
+}
+
+.writewise-input-section  {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #2e7d32;
+    font-size: 14px;
+}
+
+.writewise-input-section  input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.writewise-input-section  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.writewise-input-section  button:hover {
+    background-color: #0056b3;
+}
+
+#writewise-response-section {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: none;
+    font-size: 14px;
+}
+
+.writewise-icon-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.writewise-generate-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.writewise-generate-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: #666;
+}
+
+.writewise-generate-icon:hover svg {
+    fill: #333;
+}
+
+.writewise-icon-label {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+}
+
+.writewise-generate-icon:hover .icon-label {
+    color: #333;
+}

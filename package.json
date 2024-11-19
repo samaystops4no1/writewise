@@ -1,0 +1,14 @@
+{
+  "name": "WriteWise",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "webpack --config webpack.config.js"
+  },
+  "dependencies": {
+    "path": "^0.12.7",
+    "webpack": "^5.96.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
+  }
+}
