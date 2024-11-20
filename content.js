@@ -1,9 +1,3 @@
-console.log("This works well");
-
-let WORD_COUNT = 0;
-let LAST_CHAR = null;
-let TYPE_WAIT_PERIOD = 3000;
-let TIMEOUT_GLOBAL;
 let FLOW_CHANGE = false;
 let LAST_RIGHT_CLICKED_ELEMENT = null;
 let LAST_FOCUS_OUT_ELEMENT = null;
@@ -12,29 +6,19 @@ addEventListeners();
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-
-      if (request.message === "MISTAKE_FOUND") {
-        sendResponse({status: "ok"});
-        indicateSpellingMistake(request.word_list);
-      }
-
       if(request.message === "WRONG_WORD_LIST"){
         sendResponse({status: "ok"});
         generatePopupWindow(request.wrong_word_list, request.error);
       }
       if(request.message === "QUESTION_POPUP"){
-        console.log("Adding question popup");
         sendResponse({status: "ok"});
         generateQuestionWindow(request.selection_text);
       }
       if(request.message === "ANSWER_RCVD"){
-        console.log("Answer Recieeve");
         sendResponse({status: "ok"});
-        console.log(request.answer);
         handleAnswerRcvd(request.answer, request.error);
       }
       if(request.message === "GENERATE_CONTENT_RCVD"){
-        console.log("content rcvd");
         sendResponse({status: "ok"});
         handleGeneratedContent(request.content, request.error);
       }
@@ -46,7 +30,6 @@ chrome.runtime.onMessage.addListener(
 );
 
 function addEventListeners(){
-    //document.addEventListener('input', handleInputKeys, true);
     document.addEventListener('focusout', handleFocusOut, true);
     document.addEventListener('focusin', handleFocusIn, true);
     document.addEventListener('click', handleClicks, true);
@@ -57,51 +40,19 @@ function addEventListeners(){
 }
 
 function handleFocusIn(event){
-    console.log("focus in called")
     const target = event.target;
-    console.log(target.tagName);
-    console.log(target.isContentEditable);
 
     if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
-        console.log("Correct elements");
         if(!($(target).parents("#writewise-popup-id").length) && !($(target).parents("#questionwise-popup-id").length)){
-            // if(!FLOW_CHANGE){
-            console.log("not our element");
-                FLOW_CHANGE = true;
-                addModalIcon(target);
-            //}
+            $('.writewise-internal').remove();
+            $(".writewise-popup-window").remove();
+            $(".questionwise-container").remove();
+            addModalIcon(target);
         }   
     }
 }
 
-function handleInputKeys(event){
-    const target = event.target;
-
-    // Check if the target is a standard input, textarea, or contenteditable element
-    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
-        let targetContent = (target.value) ? (target.value) : (target.textContent);
-
-        //trigger timout
-        clearTimeout(TIMEOUT_GLOBAL);
-        TIMEOUT_GLOBAL = setTimeout(callSpellCheck, TYPE_WAIT_PERIOD, targetContent);
-
-        if(event.data === " " && LAST_CHAR != " "){
-                //this means new word
-                WORD_COUNT++;
-                if(WORD_COUNT >= 5){
-                    clearTimeout(TIMEOUT_GLOBAL);
-                    //call the spell check api
-                    callSpellCheck(targetContent);
-                }
-        }
-
-        LAST_CHAR = event.data;
-    }
-}
-
 function addModalIcon(target){
-    console.log("adding icon");
-    
     //first remove all existing icons
     $('.writewise-internal').remove()
 
@@ -214,9 +165,7 @@ function generateQuestionWindow(selectionText){
 function handleAnswerRcvd(answer, error){
     $(".questionwise-response-loader").hide();
     const responseDiv = document.getElementById('questionwise-response');
-    console.log(answer);
     if(!error){
-        console.log("reaches here");
         responseDiv.textContent = JSON.parse(answer).answer;
     }
     else{
@@ -252,33 +201,23 @@ function fetchSpellingMistakes(inputText){
 }
 
 function handleFocusOut(event){
-    console.log("Focus out called");
-
     if (event.target.id !== "writewise-popup-id" && event.target.id !== "writewise-icon-id" && event.target.id !== "writewise-image-icon-id" && !($(event.target).parents("#writewise-popup-id").length) && !($(event.target).parents("#questionwise-popup-id").length)) {
-        console.log("Last focus out changed");
         LAST_FOCUS_OUT_ELEMENT = event.target;
     }
 }
 
 function callSpellCheck(textContent){
-    WORD_COUNT = 0;
-
     chrome.runtime.sendMessage({message: "SPELL_CHECK", text_content: textContent}, function(response) {  });
 }
 
-function indicateSpellingMistake(wordList){
-    console.log("Spelling mistake found");
-    $(".writewise-internal").css("border", "2px solid red");
-}
-
 function handleClicks(event){
-    if (event.target.id !== "writewise-popup-id" && event.target.id !== "writewise-icon-id" && event.target.id !== "writewise-image-icon-id" && !($(event.target).parents("#writewise-popup-id").length) && !($(event.target).parents("#questionwise-popup-id").length) && !(event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable)) {
-        FLOW_CHANGE = false;
-
-        //delete all existing icons
-        $('.writewise-internal').remove();
-        $(".writewise-popup-window").remove();
-        $(".questionwise-container").remove();
+    let target = event.target;
+    if (!(target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        if(!($(target).parents("#writewise-popup-id").length) && !($(target).parents("#questionwise-popup-id").length) && target.id !== "writewise-popup-id" && target.id !== "writewise-icon-id" && target.id !== "writewise-image-icon-id" ){
+            $('.writewise-internal').remove();
+            $(".writewise-popup-window").remove();
+            $(".questionwise-container").remove();
+        }   
     }
 }
 
@@ -394,10 +333,7 @@ function fetchAnswer(selectionText, question){
 }
 
 function generateContent(tone, persona, info){
-    console.log("Generate Content function called");
     let inputText = $(LAST_FOCUS_OUT_ELEMENT).val() || $(LAST_FOCUS_OUT_ELEMENT).text();
-    console.log(inputText);
-
     chrome.runtime.sendMessage({message: "GENERATE_CONTENT", tone: tone, persona: persona, info: info, input_text: inputText}, function(response) {  });
 
 }
@@ -501,15 +437,12 @@ function addSpellCheckJS(){
     });
 
     $(".writewise-close-button").click(function(event){
-        console.log("Close Button Clicked");
         $(".writewise-popup-window").remove();
     });
 
     let inputText = $(LAST_FOCUS_OUT_ELEMENT).val() || $(LAST_FOCUS_OUT_ELEMENT).text();
-    console.log("Input text diable");
-    console.log(inputText);
+    
     if(!inputText){
-        console.log("here");
         $(".writewise-generate-icon").css({"pointer-events": "none", "opacity": "0.5"});
     }
 }

@@ -1,6 +1,14 @@
 import appConfig from "./app-config.js";
 import envConfig, { environment } from "./env-config.js";
 
+async function fetchApiKey(){
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(["apiKey"], (result) => { 
+      resolve(result["apiKey"]);
+    });
+  });
+}
+
 const config = appConfig[envConfig.environment]; 
 
 chrome.runtime.onMessage.addListener(
@@ -52,7 +60,7 @@ chrome.contextMenus.onClicked.addListener(function(info, tabs){
 
 });
 
-function spellCheck(textContent, callback){
+async function spellCheck(textContent, callback){
     let reqBody = {
         "model": config.model,
         "messages": [
@@ -73,7 +81,7 @@ function spellCheck(textContent, callback){
         "details":{
             "method": "POST",
             "headers": {
-                "Authorization": "",
+                "Authorization": "Bearer " + await fetchApiKey(),
                 "Content-Type": "application/json"
             },
             "body": JSON.stringify(reqBody)
@@ -95,16 +103,7 @@ function spellCheck(textContent, callback){
 
 }
 
-function handleWordMistakes(wordList, tabID){
-  let messageObject = {
-    "message": "MISTAKE_FOUND",
-    "word_list": wordList
-  }
-
-  sendMessageToContentScript(tabID, messageObject, ( ) => { });
-}
-
-function fetchAnswer(selectionText, question, tabID){
+async function fetchAnswer(selectionText, question, tabID){
   let reqBody = {
     "model": config.model,
     "temperature": 0,
@@ -126,7 +125,7 @@ function fetchAnswer(selectionText, question, tabID){
       "details":{
           "method": "POST",
           "headers": {
-              "Authorization": "",
+              "Authorization": "Bearer " + await fetchApiKey(),
               "Content-Type": "application/json"
           },
           "body": JSON.stringify(reqBody)
@@ -169,7 +168,7 @@ function getWrongWordList(inputText, tabID){
   });
 }
 
-function generateContent(tone, persona, info, inputText, tabID){
+async function generateContent(tone, persona, info, inputText, tabID){
   let systemContent = (inputText) ? ("Use the following text at information already typed in by the user - " + inputText) : (" "); 
   let userContent = "As a " + ((persona) ? (persona) : ("working professional")) + " generate " + ((tone) ? (tone) : ("formal")) + " content based on text already entered. " + ((info) ? ("This is the additional information on generating content - " + info) : (" "));
 
@@ -189,12 +188,12 @@ function generateContent(tone, persona, info, inputText, tabID){
         "response_format":  config.gpt_api.generate_content.body.response_format
     };
 
-    requestObject = {
+    let requestObject = {
       "url": config.url,
       "details":{
           "method": "POST",
           "headers": {
-              "Authorization": "",
+              "Authorization": "Bearer " + await fetchApiKey(),
               "Content-Type": "application/json"
           },
           "body": JSON.stringify(reqBody)
@@ -220,7 +219,7 @@ function generateContent(tone, persona, info, inputText, tabID){
     });
 }
 
-function inputRegen(task, inputText, tabID){
+async function inputRegen(task, inputText, tabID){
   let systemContent =  (inputText) ? ("Use the following text at information already typed in by the user - " + inputText) : (" ");
   let userContent = task + " the entered text."
 
@@ -240,12 +239,12 @@ function inputRegen(task, inputText, tabID){
     "response_format":  config.gpt_api.generate_content.body.response_format
     };
 
-    requestObject = {
+    let requestObject = {
       "url": config.url,
       "details":{
           "method": "POST",
           "headers": {
-              "Authorization": "",
+              "Authorization": "Bearer " + await fetchApiKey(),
               "Content-Type": "application/json"
           },
           "body": JSON.stringify(reqBody)
@@ -301,16 +300,4 @@ function sendMessageToContentScript(tabId, messageObject, callback){
   catch(err){
       //do something with error
   }
-}
-
-function getChromeVariables(key, callback){
-  chrome.storage.sync.get(key, function(result) {
-      callback(result);
-  });
-}
-
-function setChromeVariables(object, callback){
-  chrome.storage.sync.set(object, function() {
-      callback();
-  });
 }
